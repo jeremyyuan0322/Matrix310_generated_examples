@@ -1,0 +1,2 @@
+Using wifi to connect the internet.
+Source: https://www.arduino.cc/reference/en/libraries/ethernet/
