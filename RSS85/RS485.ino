@@ -4,6 +4,9 @@ Matrix310 uses SERIAL2 PINS to achieve RS485 communication.
 */
 
 #include "./src/Artila-Matrix310.h"
+char msg[] = "Message\0";
+char buf[64];
+int readLen = 0;
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(100);
@@ -20,5 +23,34 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  int writeLen = Serial2.write(msg);
+  Serial2.flush();
+  digitalWrite(COM1_RTS, LOW); // read
+  delay(0.01);
+  Serial.print("data send: ");
+  Serial.println(writeLen);
+  delay(32);
+  if (Serial2.available() > 0)
+  {
+    readLen = Serial2.readBytes(buf, sizeof(buf));
+    Serial2.flush();
+    digitalWrite(COM1_RTS, HIGH); // write
+    delay(0.01);
+  }
+  else
+  {
+    Serial.println("read nothing!");
+  }
+
+  Serial.print("data receive: ");
+  Serial.println(readLen);
+  for (int i = 0; i < readLen; i++)
+  {
+    Serial.print(buf);
+    Serial.print(" ");
+  }
+  Serial.println("");
+  Serial.println("do it again~");
+  Serial.println("");
+  delay(3000);
 }
