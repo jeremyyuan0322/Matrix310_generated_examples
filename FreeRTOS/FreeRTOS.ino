@@ -1,12 +1,10 @@
+#include "src/Artila-Matrix310.h"
 #if CONFIG_FREERTOS_UNICORE
 #define ARDUINO_RUNNING_CORE 0
 #else
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#ifndef LED_BUILTIN
-#define LED_BUILTIN 13
-#endif
 
 // define two tasks for Blink & AnalogRead
 void TaskBlink( void *pvParameters );
@@ -61,14 +59,14 @@ void TaskBlink(void *pvParameters)  // This is a task.
   the Technical Specs of your board.
 */
 
-  // initialize digital LED_BUILTIN on pin 13 as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  // initialize digital LED_READY on pin 13 as an output.
+  pinMode(LED_READY, OUTPUT);
 
   for (;;) // A Task shall never return or exit.
   {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(LED_READY, HIGH);   // turn the LED on (HIGH is the voltage level)
     vTaskDelay(100);  // one tick delay (15ms) in between reads for stability
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(LED_READY, LOW);    // turn the LED off by making the voltage LOW
     vTaskDelay(100);  // one tick delay (15ms) in between reads for stability
   }
 }
