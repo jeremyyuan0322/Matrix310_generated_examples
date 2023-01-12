@@ -4,14 +4,15 @@ Matrix310 uses SERIAL2 PINS to achieve RS485 communication.
 */
 
 #include "./src/Artila-Matrix310.h"
-char msg[] = "Message\0";
-char buf[64];
 int readLen = 0;
+String writeMsg = "Message";
+String readStr = "";
+
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(100);
   //Setup Serial2 PINS with the specified baud rates that is depends on the device you connect.
-  Serial2.begin(9600);
+  Serial2.begin(115200);
   Serial2.setTimeout(100);
   //Configures the COM1_RTS pin to behave as an output.
   pinMode(COM1_RTS, OUTPUT);
@@ -23,34 +24,40 @@ void setup() {
 }
 
 void loop() {
-  int writeLen = Serial2.write(msg);
+  int writeLen = Serial2.print(writeMsg);
   Serial2.flush();
-  digitalWrite(COM1_RTS, LOW); // read
-  delay(0.01);
+  delay(32);
   Serial.print("data send: ");
   Serial.println(writeLen);
-  delay(32);
-  if (Serial2.available() > 0)
-  {
-    readLen = Serial2.readBytes(buf, sizeof(buf));
-    Serial2.flush();
-    digitalWrite(COM1_RTS, HIGH); // write
-    delay(0.01);
-  }
-  else
-  {
-    Serial.println("read nothing!");
-  }
 
-  Serial.print("data receive: ");
-  Serial.println(readLen);
-  for (int i = 0; i < readLen; i++)
-  {
-    Serial.print(buf);
-    Serial.print(" ");
+  digitalWrite(COM1_RTS, LOW);  // read
+  delay(0.01);
+
+  unsigned long Time485;
+  Time485 = millis();
+
+  while (1) {
+    if (Serial2.available()) {
+      readStr = Serial2.readString();
+      Serial2.flush();
+      delay(32);
+      readLen = readStr.length()-2;
+      Serial.printf("data receive: %i\n", readLen);
+      Serial.printf("read: %s\n", readStr);
+      
+      break;
+    }
+    if (millis() - Time485 > 5000) {
+      Serial.println("read nothing!");
+      break;
+    }
   }
+  digitalWrite(COM1_RTS, HIGH);  // write
+  delay(0.01);
   Serial.println("");
   Serial.println("do it again~");
   Serial.println("");
   delay(3000);
 }
+
+
