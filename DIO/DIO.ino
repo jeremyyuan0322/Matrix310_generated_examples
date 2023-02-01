@@ -2,9 +2,9 @@
 Use digitalRead() to read the value from a specified digital pin, either HIGH or LOW.
 
 DIO pin define:
-DO1->25 pin
-DI1->36 pin
-DI2->39 pin
+DO1->pin 25
+DI1->pin 35
+DI2->pin 39
 */
 #include "src/Artila-Matrix310.h"
 
@@ -19,15 +19,10 @@ void readDI(){
     Serial.println((String)"DI2: " + di2_status);
 }
 
-void initGPIO()
-{
+void setup() {
     pinMode(DO1, OUTPUT);
     pinMode(DI1, INPUT);
     pinMode(DI2, INPUT);
-}
-
-void setup() {
-    initGPIO();
     Serial.begin(115200);    
     readDI();
 }

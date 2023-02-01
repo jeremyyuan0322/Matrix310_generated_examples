@@ -1,21 +1,23 @@
 /*
 Using Ethernet.begin(mac) with the proper network setup, the Ethernet shield will automatically obtain an IP address.
 To make sure the DHCP lease is properly renewed when needed, be sure to call Ethernet.maintain() regularly.
+https://www.arduino.cc/reference/en/libraries/ethernet/
 */
 #include <Ethernet.h>
 #include "./src/Artila-Matrix310.h"
 
-// the MAC (Media access control) address for the device (array of 6 bytes). this is the Ethernet hardware address of your Matrix310.
+// The MAC (Media access control) address for the device (array of 6 bytes). 
+// This is the Ethernet hardware address which is written on a sticker under your Matrix310.
 byte mac[] = { 0x98, 0xf4, 0xab, 0x17, 0x24, 0xc4 };
 
 void setup() {
   // Ethernet LAN chip select
-  Ethernet.init(LAN_CS);
+  Ethernet.init(LAN_CS); // pin 5
   Serial.begin(115200);
 
   // start the Ethernet connection:
   Serial.println("Initialize Ethernet with DHCP:");
-  //Matrix-310 tries connecting the internet with DHCP
+  // Matrix-310 tries connecting the internet with DHCP
   unsigned long dhcpTimeout = 2000;
   if (Ethernet.begin(mac, dhcpTimeout) == 0) {
     //Fail to use DHCP
